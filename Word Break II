@@ -1,0 +1,30 @@
+class Solution {
+public:
+    
+    vector<string> rec(string s, unordered_set<string> &dic, int start, map<int,vector<string>> &m){
+        vector<string> ans;
+        if(start>=s.size()) return {""};
+        
+        if(m.find(start)!=m.end()) return m[start];
+        
+        for(int i=start+1;i<=s.size();i++){
+            string prefix=s.substr(start,i-start);
+            if(dic.count(prefix)>0){
+                vector<string> suffix=rec(s,dic,i,m);
+                for(int j=0;j<suffix.size();j++){
+                    string ans1=prefix;
+                    if(suffix[j].size()>0)
+                        ans1+=" "+suffix[j];
+                    ans.push_back(ans1);
+                }
+            } 
+        }
+        return m[start]=ans;
+    }
+    
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> dic(wordDict.begin(),wordDict.end());
+        map<int,vector<string>> m;
+        return rec(s,dic,0,m);
+    }
+};
